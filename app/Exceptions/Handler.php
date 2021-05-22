@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -39,16 +40,68 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Exception $exception)
+    public function render($request, Throwable $exception)
     {
-        // This will replace our 404 response with
-        // a JSON response.
         if ($exception instanceof ModelNotFoundException) {
+            $model = str_replace("[App\Models\\", '', $exception->getMessage());
+            $model = str_replace(']', '', $model);
             return response()->json([
-                'error' => 'Resource not found'
+                'error' => $model,
             ], 404);
+
+            abort(404);
+        }
+
+        if ($request->wantsJson()) {
+
+            if ($exception instanceof ValidationException) {
+                $errorBag = $exception->errors();
+                $errors = [];
+                $errorMessage = '';
+                foreach ($errorBag as $error) {
+                    foreach ($error as $message) {
+                        $errorMessage .= $message . "\r\n";
+                    }
+                }
+
+                return response()->json([
+                    'error' => $errorMessage
+                ], 401);
+            }
+
+            return response()->json([
+                'error' => $exception->getMessage(),
+                'debug' => [
+                    'code' => $exception->getCode(),
+                    'line'  => $exception->getLine(),
+                    'trace' => $exception->getTrace(),
+                ]
+            ], 400);
         }
 
         return parent::render($request, $exception);
+    }
+
+    /**
+     * Convert a validation exception into a JSON response.
+     *
+     * @param  [type]              $request   [description]
+     * @param  ValidationException $exception [description]
+     * @return [type]                         [description]
+     */
+    protected function invalidJson($request, ValidationException $exception)
+    {
+        $errorBag = $exception->errors();
+        $errors = [];
+        $errorMessage = '';
+        foreach ($errorBag as $error) {
+            foreach ($error as $message) {
+                $errorMessage .= $message . "\r\n";
+            }
+        }
+
+        return response()->json([
+            'error' => $errorMessage
+        ], 401);
     }
 }

@@ -14,7 +14,6 @@ class EventsTableSeeder extends Seeder
      */
     public function run()
     {
-        //
         Event::create([
                 'event_name' => 'My Event',
                 'start_date' => date('2021-06-01'),
