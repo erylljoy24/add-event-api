@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 class Event extends Model
 {
     protected $fillable = [
-        'title', 
-        'start',
-        'end',
+        'event_name', 
+        'start_date',
+        'end_date',
         'days_selected'
     ];
     protected $casts = ['days_selected' => 'array'];

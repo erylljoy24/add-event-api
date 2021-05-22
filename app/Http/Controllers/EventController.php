@@ -24,9 +24,9 @@ class EventController extends Controller
     {
         try{
             Event::create([
-                'title' => $request->get('title'),
-                'start' => date($request->get('start')),
-                'end' => date($request->get('end')),
+                'event_name' => $request->get('event_name'),
+                'start_date' => date($request->get('start_date')),
+                'end_date' => date($request->get('end_date')),
                 'days_selected' => $request->get('days_selected'),
             ]);
             $events = Event::all();
