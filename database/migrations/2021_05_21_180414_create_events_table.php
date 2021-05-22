@@ -15,10 +15,12 @@ class CreateEventsTable extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('event_name')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->json('days_selected')->nullable();
+            $table->string('title')->nullable();
+            $table->date('start')->nullable();
+            $table->date('end')->nullable();
+            $table->json('days_selected');
+            $table->string('repeat')->default('yearly');
+            $table->integer('categoryId')->default(1);
             $table->timestamps();
         });
     }
