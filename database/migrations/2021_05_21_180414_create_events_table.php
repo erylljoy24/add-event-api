@@ -18,7 +18,7 @@ class CreateEventsTable extends Migration
             $table->string('event_name')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
-            $table->json('days_selected');
+            $table->json('days_selected')->nullable();
             $table->string('repeat')->default('yearly');
             $table->integer('categoryId')->default(1);
             $table->timestamps();
