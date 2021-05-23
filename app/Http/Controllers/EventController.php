@@ -23,14 +23,14 @@ class EventController extends Controller
     public function create(Request $request)
     {
         try{
-            Event::create([
+            $single_event = Event::create([
                 'event_name' => $request->get('event_name'),
                 'start_date' => date($request->get('start_date')),
                 'end_date' => date($request->get('end_date')),
                 'days_selected' => $request->get('days_selected'),
             ]);
             $events = Event::all();
-            return Response::json(['events' => $events], HTTPResponse::$HTTP_OK);
+            return Response::json(['events' => $events, 'single_event' => $single_event], HTTPResponse::$HTTP_OK);
         } catch (\Exception $e) {
             return Response::json(['error' => $e->getMessage()], HTTPResponse::$HTTP_INTERNAL_SERVER_ERROR);
         }
